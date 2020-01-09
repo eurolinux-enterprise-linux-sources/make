@@ -3,7 +3,7 @@ Summary: A GNU tool which simplifies the build process for users
 Name: make
 Epoch: 1
 Version: 3.81
-Release: 20%{?dist}
+Release: 23%{?dist}
 License: GPLv2+
 Group: Development/Tools
 URL: http://www.gnu.org/software/make/
@@ -13,13 +13,17 @@ Patch4: make-3.80-j8k.patch
 Patch5: make-3.80-getcwd.patch
 Patch6: make-3.81-err-reporting.patch
 Patch7: make-3.81-memory.patch
-Patch8: make-3.81-rlimit.patch
+Patch8: make-rh214033.patch
 Patch9: make-3.81-newlines.patch
 Patch10: make-3.81-jobserver.patch
 Patch11: make-3.81-fdleak.patch
 Patch12: make-3.81-strcpy-overlap.patch
 Patch13: make-3.81-recursion-test.patch
 Patch14: make-3.81-copy-on-expand.patch
+Patch15: make-3.81-eval-rh1093149.patch
+Patch16: make-3.81-jobserver-tokens.patch
+Patch17: make-rh797763.patch
+Patch18: make-rh835483.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -46,6 +50,10 @@ makefile.
 %patch12 -p0
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
 
 %build
 %configure
@@ -88,6 +96,23 @@ fi
 %{_infodir}/*.info*
 
 %changelog
+* Thu Dec 17 2015 Patsy Franklin <pfrankli@redhat.com. - 1:3.81-23
+- Get rid of any avoidable limit on stack size for processes spawned
+  via $(shell). 
+- In eval_buffer() don't assume reading_file != NULL. This is not the
+  case during the secondexpansion phase.
+  Resolves: #835483
+
+* Thu Dec 10 2015 Patsy Franklin <pfrankli@redhat.com. - 1:3.81-22
+- When the exit status is 2, clean_jobserver() would incorrectly write an
+  extra jobserver token to the pipe leading to an internal error message
+  complaining that an extra jobserver token is available.
+  Resolves: #861189
+
+* Mon Dec  2 2015 Patsy Franklin <pfrankli@redhat.com. - 1:3.81-21
+- Preserve the value of reading_file rather than setting it to 0 at the end.
+  Resolves: #1093149
+
 * Fri Sep  2 2011 Petr Machata <pmachata@redhat.com> - 1:3.81-20
 - Add a patch for use-after-free when eval in variable assignments
   reassigns the same variable
