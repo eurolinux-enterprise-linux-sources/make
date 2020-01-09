@@ -3,7 +3,7 @@ Summary: A GNU tool which simplifies the build process for users
 Name: make
 Epoch: 1
 Version: 3.81
-Release: 19%{?dist}
+Release: 20%{?dist}
 License: GPLv2+
 Group: Development/Tools
 URL: http://www.gnu.org/software/make/
@@ -19,6 +19,7 @@ Patch10: make-3.81-jobserver.patch
 Patch11: make-3.81-fdleak.patch
 Patch12: make-3.81-strcpy-overlap.patch
 Patch13: make-3.81-recursion-test.patch
+Patch14: make-3.81-copy-on-expand.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -44,6 +45,7 @@ makefile.
 %patch11 -p1
 %patch12 -p0
 %patch13 -p1
+%patch14 -p1
 
 %build
 %configure
@@ -86,6 +88,11 @@ fi
 %{_infodir}/*.info*
 
 %changelog
+* Fri Sep  2 2011 Petr Machata <pmachata@redhat.com> - 1:3.81-20
+- Add a patch for use-after-free when eval in variable assignments
+  reassigns the same variable
+- Resolves: #699911
+
 * Thu Jun 24 2010 Petr Machata <pmachata@redhat.com> - 1:3.81-19
 - Fix recursion test
 - Resolves: #595367
