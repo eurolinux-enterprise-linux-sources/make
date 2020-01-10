@@ -1,0 +1,23 @@
+commit 53b4a9e66800dde643d3ce7966c5193001e3f12e
+Author: Paul Smith <psmith@gnu.org>
+Date:   Sun Oct 20 12:49:01 2013 -0400
+
+    * read.c (record_files): [SV 33034] Change fatal() to error()
+    
+    Allows deprecated syntax.  However we don't guarantee this syntax
+    will continue to be legal in the future.
+    Change suggested by David Boyce <david.s.boyce@gmail.com>
+
+diff --git a/read.c b/read.c
+index b3897b2..2966ebe 100644
+--- a/read.c
++++ b/read.c
+@@ -2110,7 +2110,7 @@ record_files (struct nameseq *filenames, const char *pattern,
+       /* Reduce escaped percents.  If there are any unescaped it's an error  */
+       name = filenames->name;
+       if (find_percent_cached (&name))
+-        fatal (flocp, _("mixed implicit and normal rules"));
++        error (flocp, _("*** mixed implicit and normal rules: deprecated syntax"));
+     }
+ }
+ 
