@@ -3,7 +3,7 @@ Summary: A GNU tool which simplifies the build process for users
 Name: make
 Epoch: 1
 Version: 3.82
-Release: 19%{?dist}
+Release: 21%{?dist}
 License: GPLv2+
 Group: Development/Tools
 URL: http://www.gnu.org/software/make/
@@ -140,6 +140,12 @@ fi
 %{_infodir}/*.info*
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 1:3.82-21
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1:3.82-20
+- Mass rebuild 2013-12-27
+
 * Thu Aug 22 2013 Petr Machata <pmachata@redhat.com> - 1:3.82-19
 - make now restores rlimit to its original values before launching
   subprocess via $(shell) (make-3.82-func_shell-rlimit.patch)
