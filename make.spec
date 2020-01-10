@@ -3,7 +3,7 @@ Summary: A GNU tool which simplifies the build process for users
 Name: make
 Epoch: 1
 Version: 3.82
-Release: 21%{?dist}
+Release: 23%{?dist}
 License: GPLv2+
 Group: Development/Tools
 URL: http://www.gnu.org/software/make/
@@ -61,6 +61,15 @@ Patch20: make-3.82-func_shell-rlimit.patch
 # patch causes this to occasionally fail.
 Patch21: make-3.82-tests-SECONDARY.patch
 
+# BZ 1323206
+# Check if the target-specific variable is the same as the global
+# variable, and if it is, don't free it.  Savannah bug #31743.
+Patch22: make-3.82-var.patch
+
+# BZ 1322670
+# In very obscure situations we may write the free token back to the pipe.
+Patch23: make-3.82-jobserver-tokens.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -96,6 +105,8 @@ makefile.
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
+%patch22 -p1
+%patch23 -p1
 
 rm -f tests/scripts/features/parallelism.orig
 
@@ -140,6 +151,16 @@ fi
 %{_infodir}/*.info*
 
 %changelog
+* Thu Jul 07 2016 Patsy Franklin <pfrankli@redhat.com> - 1:3.82-23
+- In very obscure situations we may incorrectly write the free token
+  back to the pipe.
+  Resolves: #1322670
+
+* Thu Jun 30 2016 Patsy Franklin <pfrankli@redhat.com> - 1:3.82-22
+- Check if the target-specific variable is the same as the global
+  variable, and if it is, don't free it.  Savannah bug #31743.
+  Resolves: #1323206
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 1:3.82-21
 - Mass rebuild 2014-01-24
 

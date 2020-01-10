@@ -1,0 +1,13 @@
+diff -Nrup a/main.c b/main.c
+--- a/main.c	2016-07-05 17:44:14.957064711 -0400
++++ b/main.c	2016-07-05 17:47:26.681702820 -0400
+@@ -3147,7 +3147,8 @@ clean_jobserver (int status)
+                "INTERNAL: Exiting with %u jobserver tokens (should be 0)!",
+                jobserver_tokens);
+       else
+-        while (jobserver_tokens--)
++        /* Don't write back the "free" token */
++        while (--jobserver_tokens)
+           {
+             int r;
+ 

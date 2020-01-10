@@ -1,0 +1,42 @@
+commit ae2ab76faca93cad3059808b14d02f5565275e31
+Author: Paul Smith <psmith@gnu.org>
+Date:   Tue Nov 30 14:48:52 2010 +0000
+
+    Check if the target-specific variable is the same as the global
+    variable, and if so don't try to update it.  Savannah bug #31743.
+
+diff --git a/read.c b/read.c
+index 7b5b0dd..761e976 100644
+--- a/read.c
++++ b/read.c
+@@ -1802,7 +1802,8 @@ record_target_var (struct nameseq *filenames, char *defn,
+           int len = strlen(v->name);
+ 
+           gv = lookup_variable (v->name, len);
+-          if (gv && (gv->origin == o_env_override || gv->origin == o_command))
++          if (gv && v != gv
++              && (gv->origin == o_env_override || gv->origin == o_command))
+             {
+               if (v->value != 0)
+                 free (v->value);
+diff --git a/tests/scripts/features/targetvars b/tests/scripts/features/targetvars
+index 6afd48a..a9b8dbe 100644
+--- a/tests/scripts/features/targetvars
++++ b/tests/scripts/features/targetvars
+@@ -237,6 +237,16 @@ a: ; @echo "$(FOO)"
+ 
+ run_make_test(undef, 'FOO=C', "C f1\n");
+ 
++# TEST #19: Conditional variables with command-line settings
++
++run_make_test('
++a: FOO ?= f1
++a: ; @echo "$(FOO)"
++',
++              '', "f1\n");
++
++run_make_test(undef, 'FOO=C', "C\n");
++
+ # TEST #20: Check for continuation after semicolons
+ 
+ run_make_test(q!
